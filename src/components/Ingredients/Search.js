@@ -30,7 +30,7 @@ const Search = React.memo(props => {
           )
         }
 
-        // onLoadingIngredients(loadedIngredients)
+        onLoadingIngredients(loadedIngredients)
 
       })
 

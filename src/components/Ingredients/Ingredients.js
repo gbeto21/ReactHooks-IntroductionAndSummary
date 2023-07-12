@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
@@ -8,33 +8,16 @@ function Ingredients() {
 
   const [ingredients, setIngredients] = useState([])
 
+  /** This useEffect was wrote on a previous
+   * class of What's useCallback.
+   */
   useEffect(() => {
+    console.log('RENDERING INGREDIENTS', ingredients);
+  }, [ingredients])
 
-    fetch('https://react-hooks-update-65e04-default-rtdb.firebaseio.com/ingredients.json')
-      .then(response => response.json())
-      .then(responseData => {
-
-        const loadedIngredients = []
-        for (const key in responseData) {
-          loadedIngredients.push(
-            {
-              id: key,
-              title: responseData[key].title,
-              amount: responseData[key].amount
-            }
-          )
-        }
-
-        setIngredients(loadedIngredients)
-
-      })
-
-  }, [])
-
-
-  const filteredIngredientsHandler = filteredIngredients => {
+  const filteredIngredientsHandler = useCallback(filteredIngredients => {
     setIngredients(filteredIngredients)
-  }
+  }, [])
 
   const addIngredientHandler = ingredient => {
 
