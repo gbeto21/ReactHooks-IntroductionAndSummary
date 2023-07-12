@@ -32,6 +32,10 @@ function Ingredients() {
   }, [])
 
 
+  const filteredIngredientsHandler = filteredIngredients => {
+    setIngredients(filteredIngredients)
+  }
+
   const addIngredientHandler = ingredient => {
 
     fetch(
@@ -61,7 +65,7 @@ function Ingredients() {
       <IngredientForm onAddIngredient={addIngredientHandler} />
 
       <section>
-        <Search />
+        <Search onLoadingIngredients={filteredIngredientsHandler} />
         <IngredientList ingredients={ingredients} onRemoveItem={removeIngredientHandler} />
       </section>
     </div>
