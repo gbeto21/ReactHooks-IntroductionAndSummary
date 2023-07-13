@@ -1,5 +1,13 @@
 import { useReducer, useCallback } from "react";
 
+const initialState = {
+	loading: false,
+	error: null,
+	data: null,
+	extra: null,
+	identifier: null
+}
+
 const httpReducer = (curHttpState, action) => {
 	switch (action.type) {
 		case "SEND":
@@ -12,7 +20,7 @@ const httpReducer = (curHttpState, action) => {
 			return { loading: false, error: action.errorMessage }
 
 		case "CLEAR":
-			return { ...curHttpState, error: null }
+			return initialState
 
 		default:
 			break;
@@ -20,14 +28,9 @@ const httpReducer = (curHttpState, action) => {
 }
 
 const useHttp = () => {
-	const [httpState, dispatchHttp] = useReducer(
-		httpReducer, {
-		loading: false,
-		error: null,
-		data: null,
-		extra: null,
-		identifier: null
-	})
+	const [httpState, dispatchHttp] = useReducer(httpReducer, initialState)
+
+	const clear = useCallback(() => dispatchHttp({ type: "CLEAR" }), [])
 
 	const sendRequest = useCallback((url, method, body, reqExtra, reqIdentifier) => {
 
@@ -42,7 +45,7 @@ const useHttp = () => {
 				}
 			}
 		).then(response => {
-			return response.json
+			return response.json()
 		}).then(responseData => {
 			dispatchHttp({ type: 'RESPONSE', extra: reqExtra, responseData })
 		}).catch(error => {
@@ -56,7 +59,8 @@ const useHttp = () => {
 		error: httpState.error,
 		reqExtra: httpState.extra,
 		reqIdentifier: httpState.identifier,
-		sendRequest
+		sendRequest,
+		clear
 	}
 }
 
